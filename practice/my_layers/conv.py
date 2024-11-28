@@ -47,13 +47,13 @@ class Conv2d:
     def backward(self, back_prop_params: dict = None):
         #  如果 next layer 是 flatten
         #  delta_next -> (N, n_classes)
-        #  next w.T: (n_classes, out_c*out_h*out_w)
+        #  next_w.T: (n_classes, out_c*out_h*out_w)
         #  delta -> (N, out_c*out_h*out_w)
 
         #  如果 next layer 是 Conv2d, 
         #  im2col_feat_next -> (N*out_h*out_w, in_c*kh*kw)
         #  delta_next 要從 (N, out_c*out_h*out_w) reshape 成 (N*out_h*out_w, out_c)
-        #  w -> (out_c, C*kh*kw) 
+        #  next_w -> (out_c, C*kh*kw) 
         #  delta -> (N*out_h*out_w, C*kh*kw)
         
 
