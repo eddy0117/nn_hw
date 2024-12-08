@@ -24,10 +24,10 @@ class MLP:
     def weight_init(self, params_set_list: list) -> dict:
         params = {'w' : [], 'b': [], 'act_func': []}
         for in_features, out_features, act_func in params_set_list:
-            # 使用 xavier initalization 初始化 weight
+            # 使用 He initalization 初始化 weight
             # source: https://www.numpyninja.com/post/weight-initialization-techniques
 
-            # w 是高斯分佈的隨機數，所以使用 xavier init 時分子為 2
+            # w 是高斯分佈的隨機數，所以使用 He init 時分子為 2
             w = np.random.randn(in_features, out_features) * np.sqrt(2 / in_features)
             b = np.zeros((1, out_features))
             params['w'].append(w)
@@ -77,7 +77,7 @@ class MLP:
         bs = input_feat.shape[0]
         norm_factor = 1 / bs
         num_layers = len(params['w'])
-
+        
         for idx, (Y, I, w, act_func) in enumerate(zip(forward_val['Y'][::-1], 
                                                       forward_val['I'][::-1],
                                                       params['w'][::-1], params['act_func'][::-1])):
