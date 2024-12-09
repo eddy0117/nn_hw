@@ -3,7 +3,9 @@ from abc import ABC, abstractmethod
 
 class MyModule(ABC):
     def __init__(self):
+        # in_feat 是forward 的 input x
         self.in_feat = None
+        self.params_delta = {'dW': None, 'db': None}
     @abstractmethod
     def forward(self, x):
         pass

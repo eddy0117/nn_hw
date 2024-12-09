@@ -1,19 +1,18 @@
 import numpy as np
+from ..core import MyModule
 
-
-class Conv2d:
-    def __init__(self, in_channels, out_channels, kernel_size=(3, 3), stride=1, padding=0, act_func=None):
+class Conv2d(MyModule):
+    def __init__(self, in_channels, out_channels, kernel_size=(3, 3), stride=1, padding=0):
         self.in_channels = in_channels
         self.out_channels = out_channels
         self.kernel_size = kernel_size
         self.stride = stride
         self.padding = padding
         
-        self.act_func = act_func
         self.w, self.b, self.velocity = self.weight_init()
         self.params_delta = {'dW': None, 'db': None}
-        self.activations = {'I': None, 'Y': None}
         self.im2col_feat = None
+        
     def weight_init(self) -> dict:
         params = {}
         velocity = {}
@@ -36,19 +35,18 @@ class Conv2d:
         self.w += self.velocity['w']
         self.b += self.velocity['b']
     
-    def forward(self, x) -> dict:
-        
+    def forward(self, x): 
+        self.in_feat = x
         I = self.convolution(x)
-        Y = self.act_func.forward(I)
-        self.activations['I'] = I
-        self.activations['Y'] = Y
-        return Y
+        return I
     
     def backward(self, back_prop_params: dict = None):
+        #  back_prop_params: {'delta_next': delta_next, 
+        #                     'w_next': w_next, 
+        #                     'prev_Y': prev_Y,}
+        
         #  如果 next layer 是 flatten
-        #  delta_next -> (N, n_classes)
-        #  next_w.T: (n_classes, out_c*out_h*out_w)
-        #  delta (∂L/∂Z) -> (N, out_c*out_h*out_w)
+        #  dLdZ -> (N, out_c*out_h*out_w)
 
         #  如果 next layer 是 Conv2d, 
         #  im2col_feat_next -> (N*out_h*out_w, in_c*kh*kw)

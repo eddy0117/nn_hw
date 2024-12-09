@@ -9,7 +9,6 @@ class Linear(MyModule):
 
         self.w, self.b, self.velocity = self.weight_init()
         self.params_delta = {'dW': None, 'db': None}
-        self.activations = None
 
     def weight_init(self) -> dict:
         velocity = {}
@@ -41,7 +40,9 @@ class Linear(MyModule):
         norm_factor = 1 / self.in_feat.shape[0]
         dLdZ = np.matmul(delta, self.w.T)
         
+        # dL/dW
         self.params_delta['dW'] = norm_factor * np.matmul(self.in_feat.T, delta)
+        # dL/db
         self.params_delta['db'] = norm_factor * np.sum(delta, axis=0, keepdims=True)
 
         return dLdZ
